@@ -1,12 +1,12 @@
 package gestureunlock.gestureunlock.listener;
 
-import gestureunlock.gestureunlock.view.BackupGestureLockViewGroup;
+import gestureunlock.gestureunlock.view.BaseGestureLockViewGroup;
 
 /**
  * Created by tangqiwei on 2017/5/12.
  */
 
-public interface OnSetGestureLockViewListener extends BackupGestureLockViewGroup.OnGestureLockViewListener {
+public interface OnSetGestureLockViewListener extends BaseGestureLockViewGroup.OnGestureLockViewListener {
 
     /**
      * 设置手势

@@ -27,7 +27,7 @@ import gestureunlock.gestureunlock.R;
  * Created by tangqiwei on 2017/5/11.
  */
 
-public class BackupGestureLockViewGroup extends RelativeLayout {
+public class BaseGestureLockViewGroup extends RelativeLayout {
 
     private static final String TAG = "BackupGestureLockViewGroup";
     /**
@@ -106,20 +106,20 @@ public class BackupGestureLockViewGroup extends RelativeLayout {
      */
     private OnGestureLockViewListener mOnGestureLockViewListener;
 
-    public BackupGestureLockViewGroup(Context context, AttributeSet attrs)
+    public BaseGestureLockViewGroup(Context context, AttributeSet attrs)
     {
         this(context, attrs, 0);
     }
 
-    public BackupGestureLockViewGroup(Context context, AttributeSet attrs,
-                                int defStyle)
+    public BaseGestureLockViewGroup(Context context, AttributeSet attrs,
+                                    int defStyle)
     {
         super(context, attrs, defStyle);
         /**
          * 获得所有自定义的参数的值
          */
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.BackupGestureLockViewGroup, defStyle, 0);
+                R.styleable.BaseGestureLockViewGroup, defStyle, 0);
         int n = a.getIndexCount();
 
         for (int i = 0; i < n; i++)
@@ -127,24 +127,24 @@ public class BackupGestureLockViewGroup extends RelativeLayout {
             int attr = a.getIndex(i);
             switch (attr)
             {
-                case R.styleable.BackupGestureLockViewGroup_color_no_finger_inner_circle:
+                case R.styleable.BaseGestureLockViewGroup_color_no_finger_inner_circle:
                     mNoFingerInnerCircleColor = a.getColor(attr,
                             mNoFingerInnerCircleColor);
                     break;
-                case R.styleable.BackupGestureLockViewGroup_color_no_finger_outer_circle:
+                case R.styleable.BaseGestureLockViewGroup_color_no_finger_outer_circle:
                     mNoFingerOuterCircleColor = a.getColor(attr,
                             mNoFingerOuterCircleColor);
                     break;
-                case R.styleable.BackupGestureLockViewGroup_color_finger_on:
+                case R.styleable.BaseGestureLockViewGroup_color_finger_on:
                     mFingerOnColor = a.getColor(attr, mFingerOnColor);
                     break;
-                case R.styleable.BackupGestureLockViewGroup_color_finger_up:
+                case R.styleable.BaseGestureLockViewGroup_color_finger_up:
                     mFingerUpColor = a.getColor(attr, mFingerUpColor);
                     break;
-                case R.styleable.BackupGestureLockViewGroup_count:
+                case R.styleable.BaseGestureLockViewGroup_count:
                     mCount = a.getInt(attr, 3);
                     break;
-                case R.styleable.BackupGestureLockViewGroup_tryTimes:
+                case R.styleable.BaseGestureLockViewGroup_tryTimes:
                     mTryTimes = a.getInt(attr, 5);
                 default:
                     break;

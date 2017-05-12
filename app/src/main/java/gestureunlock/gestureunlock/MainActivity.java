@@ -4,19 +4,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import gestureunlock.gestureunlock.view.BackupGestureLockViewGroup;
+import gestureunlock.gestureunlock.view.BaseGestureLockViewGroup;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BackupGestureLockViewGroup mGestureLockViewGroup;
+    private BaseGestureLockViewGroup mGestureLockViewGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGestureLockViewGroup = (BackupGestureLockViewGroup) findViewById(R.id.id_gestureLockViewGroup);
+        mGestureLockViewGroup = (BaseGestureLockViewGroup) findViewById(R.id.id_gestureLockViewGroup);
         mGestureLockViewGroup.setAnswer(new int[] { 1, 2, 3, 4,5 });
         mGestureLockViewGroup
-                .setOnGestureLockViewListener(new BackupGestureLockViewGroup.OnGestureLockViewListener()
+                .setOnGestureLockViewListener(new BaseGestureLockViewGroup.OnGestureLockViewListener()
                 {
 
                     @Override

@@ -7,7 +7,7 @@
     <attr name="count" format="integer" />
     <attr name="tryTimes" format="integer" />
 
-    <declare-styleable name="BackupGestureLockViewGroup">
+    <declare-styleable name="BaseGestureLockViewGroup">
         <attr name="color_no_finger_inner_circle" />
         <attr name="color_no_finger_outer_circle" />
         <attr name="color_finger_on" />
