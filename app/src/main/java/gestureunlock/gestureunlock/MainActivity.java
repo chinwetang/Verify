@@ -28,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onSetSucceed(int[] result) {
+                        Toast.makeText(MainActivity.this,result.toString(),Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
                     public void onGestureEvent(boolean matched)
                     {
                         Toast.makeText(MainActivity.this, matched+"",

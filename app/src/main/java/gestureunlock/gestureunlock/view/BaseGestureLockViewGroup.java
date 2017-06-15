@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +106,16 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
      * 回调接口
      */
     private OnGestureLockViewListener mOnGestureLockViewListener;
+    /**
+     * 显示模式
+     */
+    private int mode=MODE_UNLOCK;
+
+    public final static int MODE_SET=1,MODE_UNLOCK=2;
+    /**
+     * 设置返回结果
+     */
+    private int[] mResult;
 
     public BaseGestureLockViewGroup(Context context, AttributeSet attrs)
     {
@@ -146,6 +157,8 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                     break;
                 case R.styleable.BaseGestureLockViewGroup_tryTimes:
                     mTryTimes = a.getInt(attr, 5);
+                case R.styleable.BaseGestureLockViewGroup_mode:
+                    mode = a.getInt(attr, MODE_UNLOCK);
                 default:
                     break;
             }
@@ -291,17 +304,53 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
 
                 mPaint.setColor(mFingerUpColor);
                 mPaint.setAlpha(50);
-                this.mTryTimes--;
 
-                // 回调是否成功
-                if (mOnGestureLockViewListener != null && mChoose.size() > 0)
-                {
-                    mOnGestureLockViewListener.onGestureEvent(checkAnswer());
-                    if (this.mTryTimes == 0)
-                    {
-                        mOnGestureLockViewListener.onUnmatchedExceedBoundary();
-                    }
+                switch (mode) {
+                    case MODE_SET:
+                        if(mChoose.size()<4){
+                            Toast.makeText(getContext(),"至少连接四个点",Toast.LENGTH_SHORT).show();
+                        }else if(mResult==null){
+                                mResult=new int[mChoose.size()];
+                            for (int i = 0; i < mResult.length; i++) {
+                                mResult[i]=mChoose.get(i);
+                            }
+                            Toast.makeText(getContext(),"再次确认",Toast.LENGTH_SHORT).show();
+                        }else{
+                            if(mChoose.size()!=mResult.length){
+                                Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
+                                mResult=null;
+                            }else{
+                                boolean isSame=true;
+                                for (int i = 0; i < mResult.length; i++) {
+                                    if(mResult[i]!=mChoose.get(i)){
+                                        isSame=false;
+                                        break;
+                                    }
+                                }
+                                if(isSame){
+                                    mOnGestureLockViewListener.onSetSucceed(mResult);
+                                }else{
+                                    Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
+                                }
+                                mResult=null;
+                            }
+                        }
+                        break;
+                    case MODE_UNLOCK:
+                        this.mTryTimes--;
+
+                        // 回调是否成功
+                        if (mOnGestureLockViewListener != null && mChoose.size() > 0)
+                        {
+                            mOnGestureLockViewListener.onGestureEvent(checkAnswer());
+                            if (this.mTryTimes == 0)
+                            {
+                                mOnGestureLockViewListener.onUnmatchedExceedBoundary();
+                            }
+                        }
+                        break;
                 }
+
 
                 Log.e(TAG, "mUnMatchExceedBoundary = " + mTryTimes);
                 Log.e(TAG, "mChoose = " + mChoose);
@@ -488,5 +537,9 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
          * 超过尝试次数
          */
         public void onUnmatchedExceedBoundary();
+        /**
+         *设置成功返回答案
+         */
+        public void onSetSucceed(int[] result);
     }
 }
