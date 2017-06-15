@@ -50,7 +50,12 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
 
     private Paint mPaint;
     /**
-     * 每个GestureLockView中间的间距 设置为：mGestureLockViewWidth * 25%
+     * 间距与mGestureLockViewWidth比例
+     * mMarginBetweenLockView/mGestureLockViewWidth
+     */
+    private double spaceCoefficient =0.25;
+    /**
+     * 每个GestureLockView中间的间距 设置为：mGestureLockViewWidth * spaceCoefficient
      */
     private int mMarginBetweenLockView = 30;
     /**
@@ -157,8 +162,13 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                     break;
                 case R.styleable.BaseGestureLockViewGroup_tryTimes:
                     mTryTimes = a.getInt(attr, 5);
+                    break;
                 case R.styleable.BaseGestureLockViewGroup_mode:
                     mode = a.getInt(attr, MODE_UNLOCK);
+                    break;
+                case R.styleable.BaseGestureLockViewGroup_spaceCoefficient:
+                    spaceCoefficient = a.getFloat(attr, 0.25f);
+                    break;
                 default:
                     break;
             }
@@ -196,9 +206,10 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
         {
             mGestureLockViews = new GestureLockView[mCount * mCount];
             // 计算每个GestureLockView的宽度
-            mGestureLockViewWidth = (int) (4 * mWidth * 1.0f / (5 * mCount + 1));
+            mGestureLockViewWidth = (int) (mWidth/((mCount+1)* spaceCoefficient +mCount));
+//                    (int) (4 * mWidth * 1.0f / (5 * mCount + 1));
             //计算每个GestureLockView的间距
-            mMarginBetweenLockView = (int) (mGestureLockViewWidth * 0.25);
+            mMarginBetweenLockView = (int) (mGestureLockViewWidth * spaceCoefficient);
             // 设置画笔的宽度为GestureLockView的内圆直径稍微小点（不喜欢的话，随便设）
             mPaint.setStrokeWidth(mGestureLockViewWidth * 0.29f);
 
@@ -376,13 +387,23 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                     int angle = (int) Math.toDegrees(Math.atan2(dy, dx)) + 90;
                     startChild.setArrowDegree(angle);
                 }
+                isAutoReset=true;
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isAutoReset){
+                            reset();
+                            invalidate();
+                        }
+                    }
+                },100);
                 break;
 
         }
         invalidate();
         return true;
     }
-
+    private boolean isAutoReset;
     private void changeItemMode()
     {
         for (GestureLockView gestureLockView : mGestureLockViews)
@@ -400,6 +421,7 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
      */
     private void reset()
     {
+        isAutoReset=false;
         mChoose.clear();
         mPath.reset();
         for (GestureLockView gestureLockView : mGestureLockViews)

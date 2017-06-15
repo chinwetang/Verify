@@ -12,6 +12,7 @@
         android:background="#F2F2F7"
         android:gravity="center_vertical"
         app:mode="set"
+        app:spaceCoefficient="0.5"
         zhy:count="3"
         zhy:tryTimes="5" />
 <!--   zhy:color_no_finger_inner_circle="#ff085D58"
