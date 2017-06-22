@@ -28,13 +28,13 @@ import gestureunlock.gestureunlock.R;
  * Created by tangqiwei on 2017/5/11.
  */
 
-public class BaseGestureLockViewGroup extends RelativeLayout {
+public class BmGestureLockViewGroup extends RelativeLayout {
 
     private static final String TAG = "BackupGestureLockViewGroup";
     /**
      * 保存所有的GestureLockView
      */
-    private GestureLockView[] mGestureLockViews;
+    private BmGestureLockView[] mBmGestureLockViews;
     /**
      * 每个边上的GestureLockView的个数
      */
@@ -42,13 +42,26 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
     /**
      * 存储答案
      */
-    private int[] mAnswer = { 0, 1, 2, 5, 8 };
+//    private int[] mAnswer = { 0, 1, 2, 5, 8 };
     /**
      * 保存用户选中的GestureLockView的id
      */
     private List<Integer> mChoose = new ArrayList<Integer>();
 
     private Paint mPaint;
+
+    /**
+     * 引线宽度
+     */
+    private float lineStrokeWidth =4;
+    /**
+     * 引线透明度
+     */
+    private int lineAalpha =50;
+    /**
+     * 内外圆半径比
+     */
+    private double circleCoefficient =0.7;
     /**
      * 间距与mGestureLockViewWidth比例
      * mMarginBetweenLockView/mGestureLockViewWidth
@@ -106,7 +119,7 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
     /**
      * 最大尝试次数
      */
-    private int mTryTimes = 4;
+//    private int mTryTimes = 4;
     /**
      * 回调接口
      */
@@ -114,28 +127,28 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
     /**
      * 显示模式
      */
-    private int mode=MODE_UNLOCK;
+//    private int mode=MODE_UNLOCK;
 
-    public final static int MODE_SET=1,MODE_UNLOCK=2;
+//    public final static int MODE_SET=1,MODE_UNLOCK=2;
     /**
      * 设置返回结果
      */
-    private int[] mResult;
+//    private int[] mResult;
 
-    public BaseGestureLockViewGroup(Context context, AttributeSet attrs)
+    public BmGestureLockViewGroup(Context context, AttributeSet attrs)
     {
         this(context, attrs, 0);
     }
 
-    public BaseGestureLockViewGroup(Context context, AttributeSet attrs,
-                                    int defStyle)
+    public BmGestureLockViewGroup(Context context, AttributeSet attrs,
+                                  int defStyle)
     {
         super(context, attrs, defStyle);
         /**
          * 获得所有自定义的参数的值
          */
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.BaseGestureLockViewGroup, defStyle, 0);
+                R.styleable.BmGestureLockViewGroup, defStyle, 0);
         int n = a.getIndexCount();
 
         for (int i = 0; i < n; i++)
@@ -143,31 +156,40 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
             int attr = a.getIndex(i);
             switch (attr)
             {
-                case R.styleable.BaseGestureLockViewGroup_color_no_finger_inner_circle:
+                case R.styleable.BmGestureLockViewGroup_color_no_finger_inner_circle:
                     mNoFingerInnerCircleColor = a.getColor(attr,
                             mNoFingerInnerCircleColor);
                     break;
-                case R.styleable.BaseGestureLockViewGroup_color_no_finger_outer_circle:
+                case R.styleable.BmGestureLockViewGroup_color_no_finger_outer_circle:
                     mNoFingerOuterCircleColor = a.getColor(attr,
                             mNoFingerOuterCircleColor);
                     break;
-                case R.styleable.BaseGestureLockViewGroup_color_finger_on:
+                case R.styleable.BmGestureLockViewGroup_color_finger_on:
                     mFingerOnColor = a.getColor(attr, mFingerOnColor);
                     break;
-                case R.styleable.BaseGestureLockViewGroup_color_finger_up:
+                case R.styleable.BmGestureLockViewGroup_color_finger_up:
                     mFingerUpColor = a.getColor(attr, mFingerUpColor);
                     break;
-                case R.styleable.BaseGestureLockViewGroup_count:
+                case R.styleable.BmGestureLockViewGroup_count:
                     mCount = a.getInt(attr, 3);
                     break;
-                case R.styleable.BaseGestureLockViewGroup_tryTimes:
-                    mTryTimes = a.getInt(attr, 5);
-                    break;
-                case R.styleable.BaseGestureLockViewGroup_mode:
-                    mode = a.getInt(attr, MODE_UNLOCK);
-                    break;
-                case R.styleable.BaseGestureLockViewGroup_spaceCoefficient:
+//                case R.styleable.BmGestureLockViewGroup_tryTimes:
+//                    mTryTimes = a.getInt(attr, 5);
+//                    break;
+//                case R.styleable.BmGestureLockViewGroup_mode:
+//                    mode = a.getInt(attr, MODE_UNLOCK);
+//                    break;
+                case R.styleable.BmGestureLockViewGroup_spaceCoefficient:
                     spaceCoefficient = a.getFloat(attr, 0.25f);
+                    break;
+                case R.styleable.BmGestureLockViewGroup_circleCoefficient:
+                    circleCoefficient = a.getFloat(attr, 0.7f);
+                    break;
+                case R.styleable.BmGestureLockViewGroup_lineAalpha:
+                    lineAalpha = a.getInt(attr,50);
+                    break;
+                case R.styleable.BmGestureLockViewGroup_lineStrokeWidth:
+                    lineStrokeWidth = a.getDimension(attr,4f);
                     break;
                 default:
                     break;
@@ -186,6 +208,28 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
         mPath = new Path();
     }
 
+    /**
+     *
+     * @param mNoFingerInnerCircleColor GestureLockView无手指触摸的状态下内圆的颜色
+     * @param mNoFingerOuterCircleColor GestureLockView无手指触摸的状态下外圆的颜色
+     * @param mFingerOnColor GestureLockView手指触摸的状态下内圆和外圆的颜色
+     * @param mFingerUpColor GestureLockView手指抬起的状态下内圆和外圆的颜色
+     * @param circleCoefficient 内外圆半径比
+     * @param spaceCoefficient 间距与mGestureLockViewWidth比例 mMarginBetweenLockView/mGestureLockViewWidth
+     * @param lineStrokeWidth 引线宽度
+     * @param lineAalpha 引线透明度
+     */
+    public void initData(int mNoFingerInnerCircleColor,int mNoFingerOuterCircleColor,int mFingerOnColor,int mFingerUpColor,float circleCoefficient,float spaceCoefficient,float lineStrokeWidth,int lineAalpha){
+        this.mNoFingerInnerCircleColor=mNoFingerInnerCircleColor;
+        this.mNoFingerOuterCircleColor=mNoFingerOuterCircleColor;
+        this.mFingerOnColor=mFingerOnColor;
+        this.mFingerUpColor=mFingerUpColor;
+        this.circleCoefficient=circleCoefficient;
+        this.spaceCoefficient=spaceCoefficient;
+        this.lineStrokeWidth=lineStrokeWidth;
+        this.lineAalpha=lineAalpha;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
@@ -202,24 +246,24 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
         // setMeasuredDimension(mWidth, mHeight);
 
         // 初始化mGestureLockViews
-        if (mGestureLockViews == null)
+        if (mBmGestureLockViews == null)
         {
-            mGestureLockViews = new GestureLockView[mCount * mCount];
+            mBmGestureLockViews = new BmGestureLockView[mCount * mCount];
             // 计算每个GestureLockView的宽度
             mGestureLockViewWidth = (int) (mWidth/((mCount+1)* spaceCoefficient +mCount));
 //                    (int) (4 * mWidth * 1.0f / (5 * mCount + 1));
             //计算每个GestureLockView的间距
             mMarginBetweenLockView = (int) (mGestureLockViewWidth * spaceCoefficient);
             // 设置画笔的宽度为GestureLockView的内圆直径稍微小点（不喜欢的话，随便设）
-            mPaint.setStrokeWidth(mGestureLockViewWidth * 0.29f);
+            mPaint.setStrokeWidth(lineStrokeWidth);
 
-            for (int i = 0; i < mGestureLockViews.length; i++)
+            for (int i = 0; i < mBmGestureLockViews.length; i++)
             {
                 //初始化每个GestureLockView
-                mGestureLockViews[i] = new GestureLockView(getContext(),
+                mBmGestureLockViews[i] = new BmGestureLockView(getContext(),
                         mNoFingerInnerCircleColor, mNoFingerOuterCircleColor,
-                        mFingerOnColor, mFingerUpColor);
-                mGestureLockViews[i].setId(i + 1);
+                        mFingerOnColor, mFingerUpColor,circleCoefficient);
+                mBmGestureLockViews[i].setId(i + 1);
                 //设置参数，主要是定位GestureLockView间的位置
                 RelativeLayout.LayoutParams lockerParams = new RelativeLayout.LayoutParams(
                         mGestureLockViewWidth, mGestureLockViewWidth);
@@ -228,13 +272,13 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                 if (i % mCount != 0)
                 {
                     lockerParams.addRule(RelativeLayout.RIGHT_OF,
-                            mGestureLockViews[i - 1].getId());
+                            mBmGestureLockViews[i - 1].getId());
                 }
                 // 从第二行开始，设置为上一行同一位置View的下面
                 if (i > mCount - 1)
                 {
                     lockerParams.addRule(RelativeLayout.BELOW,
-                            mGestureLockViews[i - mCount].getId());
+                            mBmGestureLockViews[i - mCount].getId());
                 }
                 //设置右下左上的边距
                 int rightMargin = mMarginBetweenLockView;
@@ -255,8 +299,8 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
 
                 lockerParams.setMargins(leftMagin, topMargin, rightMargin,
                         bottomMargin);
-                mGestureLockViews[i].setMode(GestureLockView.Mode.STATUS_NO_FINGER);
-                addView(mGestureLockViews[i], lockerParams);
+                mBmGestureLockViews[i].setMode(BmGestureLockView.Mode.STATUS_NO_FINGER);
+                addView(mBmGestureLockViews[i], lockerParams);
             }
 
             Log.e(TAG, "mWidth = " + mWidth + " ,  mGestureViewWidth = "
@@ -281,15 +325,15 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 mPaint.setColor(mFingerOnColor);
-                mPaint.setAlpha(50);
-                GestureLockView child = getChildIdByPos(x, y);
+                mPaint.setAlpha(lineAalpha);
+                BmGestureLockView child = getChildIdByPos(x, y);
                 if (child != null)
                 {
                     int cId = child.getId();
                     if (!mChoose.contains(cId))
                     {
                         mChoose.add(cId);
-                        child.setMode(GestureLockView.Mode.STATUS_FINGER_ON);
+                        child.setMode(BmGestureLockView.Mode.STATUS_FINGER_ON);
                         if (mOnGestureLockViewListener != null)
                             mOnGestureLockViewListener.onBlockSelected(cId);
                         // 设置指引线的起点
@@ -314,56 +358,62 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
             case MotionEvent.ACTION_UP:
 
                 mPaint.setColor(mFingerUpColor);
-                mPaint.setAlpha(50);
+                mPaint.setAlpha(lineAalpha);
 
-                switch (mode) {
-                    case MODE_SET:
-                        if(mChoose.size()<4){
-                            Toast.makeText(getContext(),"至少连接四个点",Toast.LENGTH_SHORT).show();
-                        }else if(mResult==null){
-                                mResult=new int[mChoose.size()];
-                            for (int i = 0; i < mResult.length; i++) {
-                                mResult[i]=mChoose.get(i);
-                            }
-                            Toast.makeText(getContext(),"再次确认",Toast.LENGTH_SHORT).show();
-                        }else{
-                            if(mChoose.size()!=mResult.length){
-                                Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
-                                mResult=null;
-                            }else{
-                                boolean isSame=true;
-                                for (int i = 0; i < mResult.length; i++) {
-                                    if(mResult[i]!=mChoose.get(i)){
-                                        isSame=false;
-                                        break;
-                                    }
-                                }
-                                if(isSame){
-                                    mOnGestureLockViewListener.onSetSucceed(mResult);
-                                }else{
-                                    Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
-                                }
-                                mResult=null;
-                            }
-                        }
-                        break;
-                    case MODE_UNLOCK:
-                        this.mTryTimes--;
-
-                        // 回调是否成功
-                        if (mOnGestureLockViewListener != null && mChoose.size() > 0)
-                        {
-                            mOnGestureLockViewListener.onGestureEvent(checkAnswer());
-                            if (this.mTryTimes == 0)
-                            {
-                                mOnGestureLockViewListener.onUnmatchedExceedBoundary();
-                            }
-                        }
-                        break;
+//                switch (mode) {
+//                    case MODE_SET:
+//                        if(mChoose.size()<4){
+//                            Toast.makeText(getContext(),"至少连接四个点",Toast.LENGTH_SHORT).show();
+//                        }else if(mResult==null){
+//                                mResult=new int[mChoose.size()];
+//                            for (int i = 0; i < mResult.length; i++) {
+//                                mResult[i]=mChoose.get(i);
+//                            }
+//                            Toast.makeText(getContext(),"再次确认",Toast.LENGTH_SHORT).show();
+//                        }else{
+//                            if(mChoose.size()!=mResult.length){
+//                                Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
+//                                mResult=null;
+//                            }else{
+//                                boolean isSame=true;
+//                                for (int i = 0; i < mResult.length; i++) {
+//                                    if(mResult[i]!=mChoose.get(i)){
+//                                        isSame=false;
+//                                        break;
+//                                    }
+//                                }
+//                                if(isSame){
+//                                    mOnGestureLockViewListener.onSetSucceed(mResult);
+//                                }else{
+//                                    Toast.makeText(getContext(),"两次输入不一样",Toast.LENGTH_SHORT).show();
+//                                }
+//                                mResult=null;
+//                            }
+//                        }
+//                        break;
+//                    case MODE_UNLOCK:
+//                        this.mTryTimes--;
+//
+//                        // 回调是否成功
+//                        if (mOnGestureLockViewListener != null && mChoose.size() > 0)
+//                        {
+//                            mOnGestureLockViewListener.onGestureEvent(checkAnswer());
+//                            if (this.mTryTimes == 0)
+//                            {
+//                                mOnGestureLockViewListener.onUnmatchedExceedBoundary();
+//                            }
+//                        }
+//                        break;
+//                }
+                if(mChoose!=null&&mChoose.size()>0){
+                    int[] iDs=new int[mChoose.size()];
+                    for (int i = 0; i < iDs.length; i++) {
+                        iDs[i]=mChoose.get(i);
+                    }
+                    mOnGestureLockViewListener.onBlocksSelected(iDs);
                 }
 
-
-                Log.e(TAG, "mUnMatchExceedBoundary = " + mTryTimes);
+//                Log.e(TAG, "mUnMatchExceedBoundary = " + mTryTimes);
                 Log.e(TAG, "mChoose = " + mChoose);
                 // 将终点设置位置为起点，即取消指引线
                 mTmpTarget.x = mLastPathX;
@@ -378,8 +428,8 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
                     int childId = mChoose.get(i);
                     int nextChildId = mChoose.get(i + 1);
 
-                    GestureLockView startChild = (GestureLockView) findViewById(childId);
-                    GestureLockView nextChild = (GestureLockView) findViewById(nextChildId);
+                    BmGestureLockView startChild = (BmGestureLockView) findViewById(childId);
+                    BmGestureLockView nextChild = (BmGestureLockView) findViewById(nextChildId);
 
                     int dx = nextChild.getLeft() - startChild.getLeft();
                     int dy = nextChild.getTop() - startChild.getTop();
@@ -406,11 +456,11 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
     private boolean isAutoReset;
     private void changeItemMode()
     {
-        for (GestureLockView gestureLockView : mGestureLockViews)
+        for (BmGestureLockView bmGestureLockView : mBmGestureLockViews)
         {
-            if (mChoose.contains(gestureLockView.getId()))
+            if (mChoose.contains(bmGestureLockView.getId()))
             {
-                gestureLockView.setMode(GestureLockView.Mode.STATUS_FINGER_UP);
+                bmGestureLockView.setMode(BmGestureLockView.Mode.STATUS_FINGER_UP);
             }
         }
     }
@@ -424,29 +474,29 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
         isAutoReset=false;
         mChoose.clear();
         mPath.reset();
-        for (GestureLockView gestureLockView : mGestureLockViews)
+        for (BmGestureLockView bmGestureLockView : mBmGestureLockViews)
         {
-            gestureLockView.setMode(GestureLockView.Mode.STATUS_NO_FINGER);
-            gestureLockView.setArrowDegree(-1);
+            bmGestureLockView.setMode(BmGestureLockView.Mode.STATUS_NO_FINGER);
+            bmGestureLockView.setArrowDegree(-1);
         }
     }
     /**
      * 检查用户绘制的手势是否正确
      * @return
      */
-    private boolean checkAnswer()
-    {
-        if (mAnswer.length != mChoose.size())
-            return false;
-
-        for (int i = 0; i < mAnswer.length; i++)
-        {
-            if (mAnswer[i] != mChoose.get(i))
-                return false;
-        }
-
-        return true;
-    }
+//    private boolean checkAnswer()
+//    {
+//        if (mAnswer.length != mChoose.size())
+//            return false;
+//
+//        for (int i = 0; i < mAnswer.length; i++)
+//        {
+//            if (mAnswer[i] != mChoose.get(i))
+//                return false;
+//        }
+//
+//        return true;
+//    }
 
     /**
      * 检查当前左边是否在child中
@@ -476,13 +526,13 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
      * @param y
      * @return
      */
-    private GestureLockView getChildIdByPos(int x, int y)
+    private BmGestureLockView getChildIdByPos(int x, int y)
     {
-        for (GestureLockView gestureLockView : mGestureLockViews)
+        for (BmGestureLockView bmGestureLockView : mBmGestureLockViews)
         {
-            if (checkPositionInChild(gestureLockView, x, y))
+            if (checkPositionInChild(bmGestureLockView, x, y))
             {
-                return gestureLockView;
+                return bmGestureLockView;
             }
         }
 
@@ -500,25 +550,25 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
         this.mOnGestureLockViewListener = listener;
     }
 
-    /**
-     * 对外公布设置答案的方法
-     *
-     * @param answer
-     */
-    public void setAnswer(int[] answer)
-    {
-        this.mAnswer = answer;
-    }
+//    /**
+//     * 对外公布设置答案的方法
+//     *
+//     * @param answer
+//     */
+//    public void setAnswer(int[] answer)
+//    {
+//        this.mAnswer = answer;
+//    }
 
-    /**
-     * 设置最大实验次数
-     *
-     * @param boundary
-     */
-    public void setUnMatchExceedBoundary(int boundary)
-    {
-        this.mTryTimes = boundary;
-    }
+//    /**
+//     * 设置最大实验次数
+//     *
+//     * @param boundary
+//     */
+//    public void setUnMatchExceedBoundary(int boundary)
+//    {
+//        this.mTryTimes = boundary;
+//    }
 
     @Override
     public void dispatchDraw(Canvas canvas)
@@ -547,21 +597,27 @@ public class BaseGestureLockViewGroup extends RelativeLayout {
          * @param cId
          */
         public void onBlockSelected(int cId);
+        /**
+         * 选中元素的Ids
+         *
+         * @param iDs
+         */
+        public void onBlocksSelected(int[] iDs);
 
         /**
          * 是否匹配
          *
          * @param matched
          */
-        public void onGestureEvent(boolean matched);
+//        public void onGestureEvent(boolean matched);
 
         /**
          * 超过尝试次数
          */
-        public void onUnmatchedExceedBoundary();
+//        public void onUnmatchedExceedBoundary();
         /**
          *设置成功返回答案
          */
-        public void onSetSucceed(int[] result);
+//        public void onSetSucceed(int[] result);
     }
 }

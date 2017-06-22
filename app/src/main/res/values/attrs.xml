@@ -7,18 +7,19 @@
     <attr name="count" format="integer" />
     <attr name="tryTimes" format="integer" />
     <attr name="spaceCoefficient" format="float" />
+    <attr name="circleCoefficient" format="float" />
+    <attr name="lineAalpha" format="integer" />
+    <attr name="lineStrokeWidth" format="dimension" />
 
-    <declare-styleable name="BaseGestureLockViewGroup">
+    <declare-styleable name="BmGestureLockViewGroup">
         <attr name="color_no_finger_inner_circle" />
         <attr name="color_no_finger_outer_circle" />
         <attr name="color_finger_on" />
         <attr name="color_finger_up" />
         <attr name="count" />
-        <attr name="tryTimes" />
         <attr name="spaceCoefficient" />
-        <attr name="mode" >
-            <enum name="set" value="1"/>
-            <enum name="unlock" value="2"/>
-        </attr>
+        <attr name="circleCoefficient" />
+        <attr name="lineAalpha" />
+        <attr name="lineStrokeWidth" />
     </declare-styleable>
 </resources>

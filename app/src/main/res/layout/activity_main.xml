@@ -1,22 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:background="#fff"
+    android:padding="12dp">
 
-    <gestureunlock.gestureunlock.view.BaseGestureLockViewGroup
-        xmlns:zhy="http://schemas.android.com/apk/res/gestureunlock.gestureunlock"
-        android:id="@+id/id_gestureLockViewGroup"
+    <Button
+        android:id="@+id/set"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F2F2F7"
-        android:gravity="center_vertical"
-        app:mode="set"
-        app:spaceCoefficient="0.5"
-        zhy:count="3"
-        zhy:tryTimes="5" />
-<!--   zhy:color_no_finger_inner_circle="#ff085D58"
-        zhy:color_no_finger_outer_circle="#ff08F0E0"
-        zhy:color_finger_on="#FF1734BF" -->
+        android:layout_height="45dp"
+        android:text="去设置" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/unlock"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="去解锁" />
+    <Button
+    android:id="@+id/fingerprint"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:text="指纹解锁" />
+
+
+</LinearLayout>

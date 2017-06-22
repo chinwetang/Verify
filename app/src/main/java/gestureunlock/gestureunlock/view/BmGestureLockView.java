@@ -10,7 +10,7 @@ import android.view.View;
  * Created by tangqiwei on 2017/5/11.
  */
 
-public class GestureLockView extends View {
+public class BmGestureLockView extends View {
 
     private static final String TAG = "GestureLockView";
     /**
@@ -70,13 +70,14 @@ public class GestureLockView extends View {
     private int mColorFingerOn;
     private int mColorFingerUp;
 
-    public GestureLockView(Context context , int colorNoFingerInner , int colorNoFingerOutter , int colorFingerOn , int colorFingerUp )
+    public BmGestureLockView(Context context , int colorNoFingerInner , int colorNoFingerOutter , int colorFingerOn , int colorFingerUp, double mInnerCircleRadiusRate)
     {
         super(context);
         this.mColorNoFingerInner = colorNoFingerInner;
         this.mColorNoFingerOutter = colorNoFingerOutter;
         this.mColorFingerOn = colorFingerOn;
         this.mColorFingerUp = colorFingerUp;
+        this.mInnerCircleRadiusRate= (float) mInnerCircleRadiusRate;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mArrowPath = new Path();
 
@@ -116,7 +117,7 @@ public class GestureLockView extends View {
             case STATUS_FINGER_ON:
 
                 // 绘制外圆
-                mPaint.setStyle(Paint.Style.STROKE);
+                mPaint.setStyle(Paint.Style.FILL);
                 mPaint.setColor(mColorFingerOn);
                 mPaint.setStrokeWidth(2);
                 canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
@@ -128,7 +129,7 @@ public class GestureLockView extends View {
             case STATUS_FINGER_UP:
                 // 绘制外圆
                 mPaint.setColor(mColorFingerUp);
-                mPaint.setStyle(Paint.Style.STROKE);
+                mPaint.setStyle(Paint.Style.FILL);
                 mPaint.setStrokeWidth(2);
                 canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
                 // 绘制内圆
