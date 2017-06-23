@@ -1,18 +1,18 @@
-package gestureunlock.gestureunlock;
+package om.cn.verifylibrary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import gestureunlock.gestureunlock.view.BmGestureLockViewGroup;
+import om.cn.verifylibrary.view.BmGestureLockViewGroup;
+
 
 public abstract class BaseGestureActivity extends AppCompatActivity implements BmGestureLockViewGroup.OnGestureLockViewListener {
 

@@ -39,8 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-    <gestureunlock.gestureunlock.view.BmGestureLockViewGroup
-        xmlns:zhy="http://schemas.android.com/apk/res/gestureunlock.gestureunlock"
+    <om.cn.verifylibrary.view.BmGestureLockViewGroup
         android:id="@+id/id_gestureLockViewGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,10 +48,7 @@
         app:circleCoefficient="0.5"
         app:lineStrokeWidth="4dp"
         app:lineAalpha="100"
-        zhy:count="3"
-        zhy:tryTimes="5" />
-<!--   zhy:color_no_finger_inner_circle="#ff085D58"
-        zhy:color_no_finger_outer_circle="#ff08F0E0"
-        zhy:color_finger_on="#FF1734BF" -->
+        app:count="3"
+        app:tryTimes="5" />
 
 </RelativeLayout>

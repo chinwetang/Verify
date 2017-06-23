@@ -1,4 +1,4 @@
-package gestureunlock.gestureunlock.view;
+package om.cn.verifylibrary.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,12 +11,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import gestureunlock.gestureunlock.R;
+import om.cn.verifylibrary.R;
+
 
 /**
  * 整体包含n*n个GestureLockView,每个GestureLockView间间隔mMarginBetweenLockView，
@@ -135,39 +135,36 @@ public class BmGestureLockViewGroup extends RelativeLayout {
         for (int i = 0; i < n; i++)
         {
             int attr = a.getIndex(i);
-            switch (attr)
-            {
-                case R.styleable.BmGestureLockViewGroup_color_no_finger_inner_circle:
-                    mNoFingerInnerCircleColor = a.getColor(attr,
-                            mNoFingerInnerCircleColor);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_color_no_finger_outer_circle:
-                    mNoFingerOuterCircleColor = a.getColor(attr,
-                            mNoFingerOuterCircleColor);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_color_finger_on:
-                    mFingerOnColor = a.getColor(attr, mFingerOnColor);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_color_finger_up:
-                    mFingerUpColor = a.getColor(attr, mFingerUpColor);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_count:
-                    mCount = a.getInt(attr, 3);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_spaceCoefficient:
-                    spaceCoefficient = a.getFloat(attr, 0.25f);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_circleCoefficient:
-                    circleCoefficient = a.getFloat(attr, 0.7f);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_lineAalpha:
-                    lineAalpha = a.getInt(attr,50);
-                    break;
-                case R.styleable.BmGestureLockViewGroup_lineStrokeWidth:
-                    lineStrokeWidth = a.getDimension(attr,4f);
-                    break;
-                default:
-                    break;
+            if (attr == R.styleable.BmGestureLockViewGroup_color_no_finger_inner_circle) {
+                mNoFingerInnerCircleColor = a.getColor(attr,
+                        mNoFingerInnerCircleColor);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_color_no_finger_outer_circle) {
+                mNoFingerOuterCircleColor = a.getColor(attr,
+                        mNoFingerOuterCircleColor);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_color_finger_on) {
+                mFingerOnColor = a.getColor(attr, mFingerOnColor);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_color_finger_up) {
+                mFingerUpColor = a.getColor(attr, mFingerUpColor);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_count) {
+                mCount = a.getInt(attr, 3);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_spaceCoefficient) {
+                spaceCoefficient = a.getFloat(attr, 0.25f);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_circleCoefficient) {
+                circleCoefficient = a.getFloat(attr, 0.7f);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_lineAalpha) {
+                lineAalpha = a.getInt(attr, 50);
+
+            } else if (attr == R.styleable.BmGestureLockViewGroup_lineStrokeWidth) {
+                lineStrokeWidth = a.getDimension(attr, 4f);
+
+            } else {
             }
         }
 
@@ -239,7 +236,7 @@ public class BmGestureLockViewGroup extends RelativeLayout {
                         mFingerOnColor, mFingerUpColor,circleCoefficient);
                 mBmGestureLockViews[i].setId(i + 1);
                 //设置参数，主要是定位GestureLockView间的位置
-                RelativeLayout.LayoutParams lockerParams = new RelativeLayout.LayoutParams(
+                LayoutParams lockerParams = new LayoutParams(
                         mGestureLockViewWidth, mGestureLockViewWidth);
 
                 // 不是每行的第一个，则设置位置为前一个的右边

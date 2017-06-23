@@ -8,7 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import gestureunlock.gestureunlock.view.FingerprintApprovePopView;
+import om.cn.verifylibrary.BaseGestureActivity;
+import om.cn.verifylibrary.SetGestureActivity;
+import om.cn.verifylibrary.UnLockGestureActivity;
+import om.cn.verifylibrary.view.FingerprintApprovePopView;
+
 
 /**
  * Created by tangqiwei on 2017/6/19.
@@ -37,7 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Finge
                 SetGestureActivity.actionStart(this,0);
                 break;
             case R.id.unlock:
-                UnLockGestureActivity.actionStart(this,1,BaseGestureActivity.strToIniAr(getSharedPreferences(BaseGestureActivity.PREFERENCES_NAME, Context.MODE_PRIVATE).getString(BaseGestureActivity.PREFERENCES_PASS,"")));
+                UnLockGestureActivity.actionStart(this,1, BaseGestureActivity.strToIniAr(getSharedPreferences(BaseGestureActivity.PREFERENCES_NAME, Context.MODE_PRIVATE).getString(BaseGestureActivity.PREFERENCES_PASS,"")));
                 break;
             case R.id.fingerprint:
                 new FingerprintApprovePopView(this,this,this).getPic(getWindow().getDecorView());

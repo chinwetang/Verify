@@ -1,4 +1,4 @@
-package gestureunlock.gestureunlock.view;
+package om.cn.verifylibrary.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

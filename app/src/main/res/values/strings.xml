@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">GestureUnlock</string>
-    <string name="fingerprint_hint">请使用指纹进行解锁</string>
-    <string name="or_hint">或</string>
-    <string name="enter_password">输入密码</string>
 </resources>

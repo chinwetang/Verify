@@ -1,4 +1,4 @@
-package gestureunlock.gestureunlock.view;
+package om.cn.verifylibrary.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,7 +16,8 @@ import android.widget.Toast;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
-import gestureunlock.gestureunlock.R;
+import om.cn.verifylibrary.R;
+
 
 public class FingerprintApprovePopView {
 

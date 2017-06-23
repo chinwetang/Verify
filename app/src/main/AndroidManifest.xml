@@ -18,10 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UnLockGestureActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".SetGestureActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>
