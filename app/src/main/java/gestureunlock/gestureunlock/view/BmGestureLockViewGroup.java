@@ -40,10 +40,6 @@ public class BmGestureLockViewGroup extends RelativeLayout {
      */
     private int mCount = 4;
     /**
-     * 存储答案
-     */
-//    private int[] mAnswer = { 0, 1, 2, 5, 8 };
-    /**
      * 保存用户选中的GestureLockView的id
      */
     private List<Integer> mChoose = new ArrayList<Integer>();
@@ -115,25 +111,10 @@ public class BmGestureLockViewGroup extends RelativeLayout {
      * 指引下的结束位置
      */
     private Point mTmpTarget = new Point();
-
-    /**
-     * 最大尝试次数
-     */
-//    private int mTryTimes = 4;
     /**
      * 回调接口
      */
     private OnGestureLockViewListener mOnGestureLockViewListener;
-    /**
-     * 显示模式
-     */
-//    private int mode=MODE_UNLOCK;
-
-//    public final static int MODE_SET=1,MODE_UNLOCK=2;
-    /**
-     * 设置返回结果
-     */
-//    private int[] mResult;
 
     public BmGestureLockViewGroup(Context context, AttributeSet attrs)
     {
@@ -173,12 +154,6 @@ public class BmGestureLockViewGroup extends RelativeLayout {
                 case R.styleable.BmGestureLockViewGroup_count:
                     mCount = a.getInt(attr, 3);
                     break;
-//                case R.styleable.BmGestureLockViewGroup_tryTimes:
-//                    mTryTimes = a.getInt(attr, 5);
-//                    break;
-//                case R.styleable.BmGestureLockViewGroup_mode:
-//                    mode = a.getInt(attr, MODE_UNLOCK);
-//                    break;
                 case R.styleable.BmGestureLockViewGroup_spaceCoefficient:
                     spaceCoefficient = a.getFloat(attr, 0.25f);
                     break;
@@ -251,7 +226,6 @@ public class BmGestureLockViewGroup extends RelativeLayout {
             mBmGestureLockViews = new BmGestureLockView[mCount * mCount];
             // 计算每个GestureLockView的宽度
             mGestureLockViewWidth = (int) (mWidth/((mCount+1)* spaceCoefficient +mCount));
-//                    (int) (4 * mWidth * 1.0f / (5 * mCount + 1));
             //计算每个GestureLockView的间距
             mMarginBetweenLockView = (int) (mGestureLockViewWidth * spaceCoefficient);
             // 设置画笔的宽度为GestureLockView的内圆直径稍微小点（不喜欢的话，随便设）
@@ -303,9 +277,9 @@ public class BmGestureLockViewGroup extends RelativeLayout {
                 addView(mBmGestureLockViews[i], lockerParams);
             }
 
-            Log.e(TAG, "mWidth = " + mWidth + " ,  mGestureViewWidth = "
-                    + mGestureLockViewWidth + " , mMarginBetweenLockView = "
-                    + mMarginBetweenLockView);
+//            Log.e(TAG, "mWidth = " + mWidth + " ,  mGestureViewWidth = "
+//                    + mGestureLockViewWidth + " , mMarginBetweenLockView = "
+//                    + mMarginBetweenLockView);
 
         }
     }

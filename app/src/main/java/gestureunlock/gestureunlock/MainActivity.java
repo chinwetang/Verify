@@ -14,7 +14,7 @@ import gestureunlock.gestureunlock.view.FingerprintApprovePopView;
  * Created by tangqiwei on 2017/6/19.
  */
 
-public class MainActivity extends Activity implements View.OnClickListener,FingerprintApprovePopView.DismissListener,FingerprintApprovePopView.ToPasswordListener{
+public class MainActivity extends Activity implements View.OnClickListener,FingerprintApprovePopView.DismissListener,FingerprintApprovePopView.VerifyFingerprintListener{
     Button set;
     Button unlock;
     Button fingerprint;
@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Finge
             case 0:
                 switch (resultCode) {
                     case RESULT_OK:
-                        Toast.makeText(this,"设置成功:"+data.getIntArrayExtra("result"),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"设置成功",Toast.LENGTH_SHORT).show();
                         break;
                     case RESULT_CANCELED:
                         Toast.makeText(this,"设置失败",Toast.LENGTH_SHORT).show();
@@ -74,11 +74,27 @@ public class MainActivity extends Activity implements View.OnClickListener,Finge
 
     @Override
     public void cancelReceiveValue() {
-        Toast.makeText(this,"关闭",Toast.LENGTH_SHORT).show();
+        toast("关闭");
     }
 
     @Override
-    public void toPassWord() {
+    public void onSucceed() {
+        toast("识别成功");
+    }
 
+    @Override
+    public void onNotMatch(int availableTimes) {
+        toast("不匹配，剩余"+availableTimes+"次");
+    }
+
+    @Override
+    public void onFailed() {
+        toast("识别失败");
+    }
+    /**
+     *  吐司 提示
+     */
+    protected void toast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

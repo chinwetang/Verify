@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.view.View;
 
 /**
+ * 单独一个圆点
  * Created by tangqiwei on 2017/5/11.
  */
 

@@ -24,8 +24,9 @@ public class FingerprintApprovePopView {
     private PopupWindow pop;
     private Activity context;
     private DismissListener listener;
-    private ToPasswordListener passwordListener;
+    private ToPasswordListener mPasswordListener;
     private FingerprintIdentify mFingerprintIdentify;
+    private VerifyFingerprintListener mFingerprintListener;
     private String mPhone;
 
     public FingerprintApprovePopView(Activity context) {
@@ -36,21 +37,21 @@ public class FingerprintApprovePopView {
     }
 
     public FingerprintApprovePopView(Activity context,
-                                     DismissListener listener) {
+                                     DismissListener listener,VerifyFingerprintListener fingerprintListener) {
         super();
         this.context = context;
         this.listener = listener;
-        this.mPhone=mPhone;
+        this.mFingerprintListener=fingerprintListener;
         popupInit();
     }
 
     public FingerprintApprovePopView(Activity context,
-                                     DismissListener listener,  ToPasswordListener passwordListener) {
+                                     DismissListener listener, VerifyFingerprintListener fingerprintListener, ToPasswordListener passwordListener) {
         super();
         this.context = context;
         this.listener = listener;
-        this.mPhone=mPhone;
-        this.passwordListener=passwordListener;
+        this.mFingerprintListener=fingerprintListener;
+        this.mPasswordListener =passwordListener;
         popupInit();
     }
 
@@ -69,19 +70,21 @@ public class FingerprintApprovePopView {
                 @Override
                 public void onSucceed() {
                     // 验证成功，自动结束指纹识别
-                    toast("识别成功");
+                    mFingerprintListener.onSucceed();
+                    pop.dismiss();
                 }
 
                 @Override
                 public void onNotMatch(int availableTimes) {
                     // 指纹不匹配，并返回可用剩余次数并自动继续验证
-                    toast("不匹配，剩余"+availableTimes+"次");
+                    mFingerprintListener.onNotMatch(availableTimes);
                 }
 
                 @Override
                 public void onFailed() {
                     // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
-                    toast("识别失败");
+                    mFingerprintListener.onFailed();
+                    pop.dismiss();
                 }
             });
         }
@@ -124,12 +127,12 @@ public class FingerprintApprovePopView {
                 pop.dismiss();
             }
         });
-        if(passwordListener!=null){
+        if(mPasswordListener !=null){
             llayoutPass.setVisibility(View.VISIBLE);
             txtPass.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    passwordListener.toPassWord();
+                    mPasswordListener.toPassWord();
                     pop.dismiss();
                 }
             });
@@ -142,6 +145,14 @@ public class FingerprintApprovePopView {
     }
     public interface ToPasswordListener {
         public void toPassWord();
+
+    }
+    public interface VerifyFingerprintListener {
+        public void onSucceed();
+
+        public void onNotMatch(int availableTimes);
+
+        public void onFailed();
 
     }
     /**
